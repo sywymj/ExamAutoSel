@@ -33,6 +33,7 @@
             this.toolStripDropDownButtonEntrySel = new System.Windows.Forms.ToolStripDropDownButton();
             this.入口一ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.入口二ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.公务员入口ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripDropDownButtonSet = new System.Windows.Forms.ToolStripDropDownButton();
             this.标识ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.自动选择ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -42,14 +43,15 @@
             this.自动学习ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripDropDownButton1 = new System.Windows.Forms.ToolStripDropDownButton();
             this.savePageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.离线更新题库ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.公务员题库ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.webBrowser1 = new System.Windows.Forms.WebBrowser();
-            this.离线更新题库ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.公务员题库ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
-            this.公务员入口ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripDropDownButton2 = new System.Windows.Forms.ToolStripDropDownButton();
+            this.普法考试ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStrip1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -61,7 +63,8 @@
             this.toolStripDropDownButtonEntrySel,
             this.toolStripDropDownButtonSet,
             this.toolStripDropDownButtonLMSSet,
-            this.toolStripDropDownButton1});
+            this.toolStripDropDownButton1,
+            this.toolStripDropDownButton2});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Size = new System.Drawing.Size(738, 25);
@@ -83,16 +86,23 @@
             // 入口一ToolStripMenuItem
             // 
             this.入口一ToolStripMenuItem.Name = "入口一ToolStripMenuItem";
-            this.入口一ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.入口一ToolStripMenuItem.Size = new System.Drawing.Size(136, 22);
             this.入口一ToolStripMenuItem.Text = "入口一";
             this.入口一ToolStripMenuItem.Click += new System.EventHandler(this.入口一ToolStripMenuItem_Click);
             // 
             // 入口二ToolStripMenuItem
             // 
             this.入口二ToolStripMenuItem.Name = "入口二ToolStripMenuItem";
-            this.入口二ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.入口二ToolStripMenuItem.Size = new System.Drawing.Size(136, 22);
             this.入口二ToolStripMenuItem.Text = "入口二";
             this.入口二ToolStripMenuItem.Click += new System.EventHandler(this.入口二ToolStripMenuItem_Click);
+            // 
+            // 公务员入口ToolStripMenuItem
+            // 
+            this.公务员入口ToolStripMenuItem.Name = "公务员入口ToolStripMenuItem";
+            this.公务员入口ToolStripMenuItem.Size = new System.Drawing.Size(136, 22);
+            this.公务员入口ToolStripMenuItem.Text = "公务员入口";
+            this.公务员入口ToolStripMenuItem.Click += new System.EventHandler(this.公务员入口ToolStripMenuItem_Click);
             // 
             // toolStripDropDownButtonSet
             // 
@@ -112,7 +122,7 @@
             this.标识ToolStripMenuItem.CheckOnClick = true;
             this.标识ToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.标识ToolStripMenuItem.Name = "标识ToolStripMenuItem";
-            this.标识ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.标识ToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
             this.标识ToolStripMenuItem.Text = "自动标记";
             this.标识ToolStripMenuItem.CheckedChanged += new System.EventHandler(this.标识ToolStripMenuItem_CheckedChanged);
             this.标识ToolStripMenuItem.Click += new System.EventHandler(this.标识ToolStripMenuItem_Click);
@@ -182,9 +192,24 @@
             // savePageToolStripMenuItem
             // 
             this.savePageToolStripMenuItem.Name = "savePageToolStripMenuItem";
-            this.savePageToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.savePageToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
             this.savePageToolStripMenuItem.Text = "更新题库";
             this.savePageToolStripMenuItem.Click += new System.EventHandler(this.savePageToolStripMenuItem_Click);
+            // 
+            // 离线更新题库ToolStripMenuItem
+            // 
+            this.离线更新题库ToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.公务员题库ToolStripMenuItem});
+            this.离线更新题库ToolStripMenuItem.Name = "离线更新题库ToolStripMenuItem";
+            this.离线更新题库ToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
+            this.离线更新题库ToolStripMenuItem.Text = "离线更新题库";
+            // 
+            // 公务员题库ToolStripMenuItem
+            // 
+            this.公务员题库ToolStripMenuItem.Name = "公务员题库ToolStripMenuItem";
+            this.公务员题库ToolStripMenuItem.Size = new System.Drawing.Size(136, 22);
+            this.公务员题库ToolStripMenuItem.Text = "公务员题库";
+            this.公务员题库ToolStripMenuItem.Click += new System.EventHandler(this.公务员题库ToolStripMenuItem_Click);
             // 
             // statusStrip1
             // 
@@ -227,27 +252,23 @@
             this.webBrowser1.Size = new System.Drawing.Size(706, 417);
             this.webBrowser1.TabIndex = 0;
             // 
-            // 离线更新题库ToolStripMenuItem
+            // toolStripDropDownButton2
             // 
-            this.离线更新题库ToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.公务员题库ToolStripMenuItem});
-            this.离线更新题库ToolStripMenuItem.Name = "离线更新题库ToolStripMenuItem";
-            this.离线更新题库ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.离线更新题库ToolStripMenuItem.Text = "离线更新题库";
+            this.toolStripDropDownButton2.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.toolStripDropDownButton2.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.普法考试ToolStripMenuItem});
+            this.toolStripDropDownButton2.Image = ((System.Drawing.Image)(resources.GetObject("toolStripDropDownButton2.Image")));
+            this.toolStripDropDownButton2.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripDropDownButton2.Name = "toolStripDropDownButton2";
+            this.toolStripDropDownButton2.Size = new System.Drawing.Size(69, 22);
+            this.toolStripDropDownButton2.Text = "附加功能";
             // 
-            // 公务员题库ToolStripMenuItem
+            // 普法考试ToolStripMenuItem
             // 
-            this.公务员题库ToolStripMenuItem.Name = "公务员题库ToolStripMenuItem";
-            this.公务员题库ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.公务员题库ToolStripMenuItem.Text = "公务员题库";
-            this.公务员题库ToolStripMenuItem.Click += new System.EventHandler(this.公务员题库ToolStripMenuItem_Click);
-            // 
-            // 公务员入口ToolStripMenuItem
-            // 
-            this.公务员入口ToolStripMenuItem.Name = "公务员入口ToolStripMenuItem";
-            this.公务员入口ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.公务员入口ToolStripMenuItem.Text = "公务员入口";
-            this.公务员入口ToolStripMenuItem.Click += new System.EventHandler(this.公务员入口ToolStripMenuItem_Click);
+            this.普法考试ToolStripMenuItem.Name = "普法考试ToolStripMenuItem";
+            this.普法考试ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.普法考试ToolStripMenuItem.Text = "普法考试";
+            this.普法考试ToolStripMenuItem.Click += new System.EventHandler(this.普法考试ToolStripMenuItem_Click);
             // 
             // Form1
             // 
@@ -294,6 +315,8 @@
         private System.Windows.Forms.ToolStripMenuItem 公务员题库ToolStripMenuItem;
         private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog1;
         private System.Windows.Forms.ToolStripMenuItem 公务员入口ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripDropDownButton toolStripDropDownButton2;
+        private System.Windows.Forms.ToolStripMenuItem 普法考试ToolStripMenuItem;
     }
 }
 

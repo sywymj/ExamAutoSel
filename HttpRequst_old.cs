@@ -8,7 +8,7 @@ using System.Security.Cryptography.X509Certificates;
 using ICSharpCode.SharpZipLib.GZip;
 using System.Drawing;
 using System.Text.RegularExpressions;
-using System.Threading;
+
 namespace HttpRequest
 {
     /*
@@ -24,17 +24,8 @@ namespace HttpRequest
     {
         // 保持Cookie为同一Cookie值。        
         public CookieContainer craboCookie = new CookieContainer();
-        public CookieCollection responseCookie = null;
-        public string addtionHeader = string.Empty;
-        public bool isFlash = false;
-
-
-        public static ManualResetEvent DslMutx = new ManualResetEvent(true);
-        
-
-        public string SetCookieString = string.Empty;
-
-        public bool IsQQPost = false;
+        public CookieCollection responseCookies = new CookieCollection();
+        public string responseUrl = string.Empty;
 
 
         protected string __Uri__ = null;         // 标识 Internet 资源的 URI
@@ -58,23 +49,13 @@ namespace HttpRequest
 
         protected StringBuilder __Html_Text__ = new StringBuilder();
 
-        /// <summary>
-        /// ////////////////////////////////////////
-        /// </summary>
         protected MemoryStream __MemStream__ = null;
         protected string __Boundary__ = null;
 
+
+
         public Image image = null;
-        public string responseUrl = string.Empty;
-
-        protected WebProxy __webProxy = null;
-
-        public WebProxy webProxy
-        {
-            get { return __webProxy; }
-            set { this.__webProxy = value; }
-        }
-
+        
 
         public HttpRequest()
         {
@@ -112,16 +93,14 @@ namespace HttpRequest
 
             return OpenRequest();
         }
-
-
-        public bool OpenRequest(string requestUriString, string requestReferer, MemoryStream memStream,string boundary)
+        public bool OpenRequest(string requestUriString, string requestReferer, MemoryStream memStream, string boundary)
         {
             __Uri__ = requestUriString;
             __Referer__ = requestReferer;
             __MemStream__ = memStream;
             __Method__ = "POST";
             __Boundary__ = boundary;
-            
+
             return OpenRequest();
         }
 
@@ -135,23 +114,13 @@ namespace HttpRequest
             // 清空已保留代码
             __Html_Text__.Remove(0, __Html_Text__.Length);
 
-
-            DslMutx.WaitOne();
-
-
-
             // 创建 HttpWebRequest 实例
             HttpWebRequest Request = (HttpWebRequest)WebRequest.Create(__Uri__);
 
-
-            //设置代理
-            if (this.webProxy!=null)
-            {
-                Request.Proxy = this.webProxy;
-            }
-
             // 设置跟随重定向
             Request.AllowAutoRedirect = true;
+
+            Request.ProtocolVersion = HttpVersion.Version11;
 
             #region 判断Uri资源类型
             {
@@ -161,76 +130,31 @@ namespace HttpRequest
             }
             #endregion
 
-
-            Request.KeepAlive = true;
-            Request.Timeout =120000;
+            Request.Timeout =100000;
             Request.Method = __Method__;
             Request.Accept = __Accept__;
             //Request.UserAgent = "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.2; SV1; Maxthon; .NET CLR 1.1.4322); Http STdns";
+            Request.UserAgent = @"Mozilla/5.0 (Windows; U; Windows NT 6.1; zh-CN; rv:1.9.2.23) Gecko/20110920 Firefox/3.6.23";
+
+
+
+
             //Request.UserAgent = "Mozilla/5.0 (iPhone; U; CPU iPhone OS 3_0 like Mac OS X; en-us) AppleWebKit/528.18 (KHTML, like Gecko) Version/4.0 Mobile/7A341 Safari/528.16";
-            //Request.UserAgent = @"Mozilla/5.0 (Windows NT 6.1; rv:14.0) Gecko/20100101 Firefox/14.0.1";
-            if (isFlash)
-            {
-                Request.UserAgent = @"Shockwave Flash";
-                isFlash = false;
-            } 
-            else
-            {
-                Request.UserAgent = @"Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1; Trident/4.0; .NET CLR 2.0.50727; .NET CLR 3.0.04506.648; .NET CLR 3.5.21022; .NET4.0C; .NET4.0E)";
-            
-            }
             
             
-            Request.ProtocolVersion = HttpVersion.Version11;
-            
-            //if (string.IsNullOrEmpty(addtionHeader))
-            //{
-            //    Request.CookieContainer = craboCookie;
-            //}
-            //else
-            //{
-            //    Request.Headers.Add(addtionHeader);
-            //}
-            if (!string.IsNullOrEmpty(addtionHeader))
-            {
-                Request.Headers.Add(addtionHeader);
-                addtionHeader = string.Empty;
-            }
-
-
             Request.CookieContainer = craboCookie;
-            
-            
             Request.Referer = __Referer__;
             Request.Method = __Method__;
 
             //Request.Headers[HttpRequestHeader.AcceptEncoding] = "gzip,deflate";
-
-
-            //Request.ServicePoint.Expect100Continue = false;
-            //Request.KeepAlive = true;
-            //Request.SendChunked = true;
-            //Request.AllowWriteStreamBuffering = true;
-            //Request.Headers.Add("Connection:keep-alive");
+            Request.ProtocolVersion =HttpVersion.Version10;
             
             if (__Method__ == "POST")
             {
-                
                 if (__MemStream__==null)
                 {
                     #region 请求为POST
-                    if (!IsQQPost)
-                    {
-                        Request.ContentType = "application/x-www-form-urlencoded";
-                    }
-                    else
-                    {
-                        IsQQPost = false;
-                        //Request.KeepAlive = false;
-                    }
-                    
-
-                    
+                    Request.ContentType = "application/x-www-form-urlencoded";
                     byte[] Bytes = Encoding.GetEncoding(CharacterSet).GetBytes(__Data__);
                     Request.ContentLength = Bytes.Length;
                     using (Stream writer = Request.GetRequestStream())
@@ -242,29 +166,21 @@ namespace HttpRequest
                 }
                 else
                 {
-                    Request.ContentType = "multipart/form-data; boundary=" + __Boundary__;
+                    //Request.ContentType = "multipart/form-data; boundary=" + __Boundary__;
+                    Request.ContentType = "application/octet-stream";
                     Request.ContentLength = __MemStream__.Length;
-
-                    byte[] tBuf = __MemStream__.ToArray();
                     using (Stream writer = Request.GetRequestStream())
                     {
                         __MemStream__.WriteTo(writer);
-                        //for (int i = 0; i < tBuf.Length;i++ )
-                        //{
-                        //    writer.WriteByte(tBuf[i]);
-                        //    writer.Flush();
-                        //}
-
-
                         writer.Close();
                         __MemStream__.Close();
                         __MemStream__ = null;
                     }
                 }
 
-
+                
             }
-
+            
             #region 读取返回数据
             // 设置返回值变量
             bool bResult = true;
@@ -280,18 +196,11 @@ namespace HttpRequest
 
                 if (__StatusCode__ == HttpStatusCode.OK)
                 {
-                    if (Response.Cookies!=null)
-                    {
-                        responseCookie = Response.Cookies;
-                        SetCookieString = Response.Headers.Get("Set-Cookie");
-                    }
-
-
-
                     // 判断页面编码
                     string ContentEncoding = Response.ContentEncoding.ToLower();
-                    responseUrl = Response.ResponseUri.ToString();
 
+                    responseCookies = Response.Cookies;
+                    responseUrl = Response.ResponseUri.ToString();
 
                     switch (ContentEncoding)
                     {
@@ -323,23 +232,23 @@ namespace HttpRequest
                             }
                             break;
 
-
+                        
                         default:
 
-
+                            
 
                             using (Stream reader = Response.GetResponseStream())
                             {
 
-                                if (Response.ContentType.Contains("image"))
+                                if (Response.ContentType.ToLower().Contains("image/png"))
                                 {
                                     image = Image.FromStream(reader);
-                                }
+                                } 
                                 else
                                 {
                                     MemoryStream memory = new MemoryStream();
-                                    int byteValue = -1;
-                                    while ((byteValue = reader.ReadByte()) != -1)
+                                    int byteValue=-1;
+                                    while ((byteValue=reader.ReadByte())!=-1)
                                     {
                                         memory.WriteByte((byte)byteValue);
                                     }
@@ -349,32 +258,26 @@ namespace HttpRequest
                                     __Html_Text__.Append(myEncode.GetString(myBuffer));
 
                                     //StreamReader sr = new StreamReader(reader, Encoding.Default);
-
+                                    
                                     //__Html_Text__.Append(sr.ReadToEnd());
                                     //sr.Close();
-
+                                    
                                 }
                                 reader.Close();
-
+                                
                             }
                             break;
                     }
                 }
                 else
-                {
                     bResult = false;
-                    responseUrl = string.Empty;
-                }
             }
             catch (Exception pEx)
             {
                 __Html_Text__.Append(pEx.Message);
                 return false;
             }
-            finally
-            {
-                addtionHeader = string.Empty;
-            }
+
             #endregion
 
             return bResult;
@@ -383,7 +286,8 @@ namespace HttpRequest
         {
             Encoding encode = Encoding.ASCII;
             String _htmlTemp=encode.GetString(pBuffer);
-            Match m = Regex.Match(_htmlTemp, @"<meta[^>]+?gb[\s\S]+?>", RegexOptions.IgnoreCase);
+
+            Match m = Regex.Match(_htmlTemp, @"meta[^>]+?gb[\s\S]+?>", RegexOptions.IgnoreCase);
             if (m.Success)
             {
                 return "gb2312";
@@ -394,19 +298,19 @@ namespace HttpRequest
             }
 
 
+
+
             //Match m = Regex.Match(_htmlTemp, @"<meta[\s\S]+?content=\s*""[\s\S]*?charset=(?<charset>\S+)\s*""",RegexOptions.IgnoreCase);
             //if (m.Success)
             //{
             //    if (m.Groups["charset"].Value.Length<=3)
             //    {
             //        return "gb2312";
-            //        //return "utf-8";
             //    }
             //    return m.Groups["charset"].Value;
             //} 
             //else
             //{
-            //    //return "gb2312";
             //    return "gb2312";
             //}
         

@@ -946,5 +946,17 @@ namespace ExamAutoSel
         {
 
         }
+
+        private string pfHostUrl = string.Empty;
+        private void 普法考试ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            FormPfExam pfexam = new FormPfExam();
+            pfexam.HostUrl = pfHostUrl;
+            pfexam.ShowDialog();
+            if (!string.IsNullOrEmpty(pfexam.HostUrl))
+            {
+                pfHostUrl = pfexam.HostUrl;
+            }
+        }
     }
 }
