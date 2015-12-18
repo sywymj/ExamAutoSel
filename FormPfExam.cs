@@ -30,7 +30,7 @@ namespace ExamAutoSel
             password = this.textBoxPassword.Text.Trim();
 
             CExamPFLib libObj=new CExamPFLib(HostUrl,account,password);
-            string hrString = libObj.CommitData();
+            string hrString = libObj.CommitData(this.checkBox1.Checked, textBoxExamID.Text.Trim()); 
 
             MessageBox.Show(hrString);
         }

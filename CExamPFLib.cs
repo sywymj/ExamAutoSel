@@ -20,14 +20,14 @@ namespace ExamAutoSel
 
         Encoding mPageEncode = Encoding.UTF8;
         HttpRequest.HttpRequest pfRequest = new HttpRequest.HttpRequest();
-        public CExamPFLib(string hostUrl,string pAccount,string pPass)
+        public CExamPFLib(string hostUrl, string pAccount, string pPass)
         {
             this.mHostUrl = hostUrl;
             this.mAccount = pAccount;
             this.mPassword = pPass;
             Delay = 20;
         }
-        public string CommitData()
+        public string CommitData(bool IsAsc,string pExamID)
         {
             string urlStr = string.Empty;
             string refStr = string.Empty;
@@ -38,13 +38,13 @@ namespace ExamAutoSel
             Match pfMath = null;
             try
             {
-                urlStr =string.Format(@"http://{0}",mHostUrl);
+                urlStr = string.Format(@"http://{0}", mHostUrl);
                 refStr = urlStr;
                 pfRequest.OpenRequest(urlStr, refStr);
 
-                urlStr = string.Format(@"http://{0}/system/manager/terminalLogin.do",mHostUrl);
-                postData = string.Format(@"manager.name={0}&manager.password={1}&systemType=1&actionFormNeedEditFlag=true&x=47&y=19",HttpUtility.UrlEncode(mAccount,mPageEncode)
-                    ,HttpUtility.UrlEncode(mPassword,mPageEncode));
+                urlStr = string.Format(@"http://{0}/system/manager/terminalLogin.do", mHostUrl);
+                postData = string.Format(@"manager.name={0}&manager.password={1}&systemType=1&actionFormNeedEditFlag=true&x=47&y=19", HttpUtility.UrlEncode(mAccount, mPageEncode)
+                    , HttpUtility.UrlEncode(mPassword, mPageEncode));
                 pfRequest.OpenRequest(urlStr, refStr, postData);
                 htmlStr = pfRequest.HtmlDocument;
 
@@ -58,16 +58,40 @@ namespace ExamAutoSel
                 string examID = string.Empty;
                 string userID = string.Empty;
                 int maxExamID = 0;
-                foreach (Match m in mc)
+                if (IsAsc)
                 {
-                    int ival=int.Parse(m.Groups["examid"].Value);
-                    if (ival>maxExamID)
+                    maxExamID = 0;
+                    foreach (Match m in mc)
                     {
-                        maxExamID = ival;
-                        userID = m.Groups["userid"].Value;
+                        int ival = int.Parse(m.Groups["examid"].Value);
+                        if (ival > maxExamID)
+                        {
+                            maxExamID = ival;
+                            userID = m.Groups["userid"].Value;
+                        }
                     }
                 }
+                else
+                {
+                    maxExamID = 100000;
+                    foreach (Match m in mc)
+                    {
+                        int ival = int.Parse(m.Groups["examid"].Value);
+                        if (ival < maxExamID)
+                        {
+                            maxExamID = ival;
+                            userID = m.Groups["userid"].Value;
+                        }
+                    }
+                }
+
+
                 examID = maxExamID.ToString();
+                if (!string.IsNullOrEmpty(pExamID))
+                {
+                    examID = pExamID;
+                }
+
 
                 urlStr = string.Format(@"http://{0}/exam/examUser/confimExam.do?examId={1}", mHostUrl, examID);
                 pfRequest.OpenRequest(urlStr, refStr);
@@ -83,6 +107,12 @@ namespace ExamAutoSel
                 urlStr = string.Format(@"http://{0}/exam/examUser/beginExam.do?exam.id={1}&userId={2}{3}", mHostUrl, examID, userID, string.IsNullOrEmpty(ExamUserID) ? string.Empty : string.Format("&examUserId={0}", ExamUserID));
                 pfRequest.OpenRequest(urlStr, refStr);
                 htmlStr = pfRequest.HtmlDocument;
+
+                if (htmlStr.Contains("不可在规定的开考时间段之外开始考试"))
+                {
+                    throw new Exception("请勾选或者取消考试项目顺序选择");
+                }
+
 
                 pattern = @"(?<=')\S+?exam\.do\S+?(?=')";
                 pfMath = Regex.Match(htmlStr, pattern, RegexOptions.IgnoreCase);

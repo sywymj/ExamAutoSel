@@ -36,6 +36,9 @@
             this.label3 = new System.Windows.Forms.Label();
             this.button1 = new System.Windows.Forms.Button();
             this.label4 = new System.Windows.Forms.Label();
+            this.checkBox1 = new System.Windows.Forms.CheckBox();
+            this.label5 = new System.Windows.Forms.Label();
+            this.textBoxExamID = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // label1
@@ -88,7 +91,7 @@
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(347, 103);
+            this.button1.Location = new System.Drawing.Point(347, 137);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(139, 31);
             this.button1.TabIndex = 6;
@@ -99,17 +102,48 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(13, 122);
+            this.label4.Location = new System.Drawing.Point(13, 156);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(197, 12);
             this.label4.TabIndex = 7;
             this.label4.Text = "网址格式示例：192.168.30.34:3028";
             // 
+            // checkBox1
+            // 
+            this.checkBox1.AutoSize = true;
+            this.checkBox1.Checked = true;
+            this.checkBox1.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBox1.Location = new System.Drawing.Point(84, 103);
+            this.checkBox1.Name = "checkBox1";
+            this.checkBox1.Size = new System.Drawing.Size(120, 16);
+            this.checkBox1.TabIndex = 8;
+            this.checkBox1.Text = "考试项目顺序选择";
+            this.checkBox1.UseVisualStyleBackColor = true;
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(232, 104);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(89, 12);
+            this.label5.TabIndex = 9;
+            this.label5.Text = "考试项目编码：";
+            // 
+            // textBoxExamID
+            // 
+            this.textBoxExamID.Location = new System.Drawing.Point(319, 100);
+            this.textBoxExamID.Name = "textBoxExamID";
+            this.textBoxExamID.Size = new System.Drawing.Size(100, 21);
+            this.textBoxExamID.TabIndex = 10;
+            // 
             // FormPfExam
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(498, 148);
+            this.ClientSize = new System.Drawing.Size(498, 178);
+            this.Controls.Add(this.textBoxExamID);
+            this.Controls.Add(this.label5);
+            this.Controls.Add(this.checkBox1);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.textBoxPassword);
@@ -138,5 +172,8 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.CheckBox checkBox1;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.TextBox textBoxExamID;
     }
 }
